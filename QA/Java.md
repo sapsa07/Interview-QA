@@ -114,6 +114,84 @@ I am d
 
 ---
 
+# Java 8 Features with Examples
+
+Some of the important Java 8 features are;
+
+1. forEach() method in Iterable interface
+2. default and static methods in Interfaces
+3. Functional Interfaces and Lambda Expressions
+4. Java Stream API for Bulk Data Operations on Collections
+5. Java Time API
+6. Collection API improvements
+7. Concurrency API improvements
+8. Java IO improvements
+
+Let’s have a brief look on these Java 8 features. I will provide some code snippets for better understanding the features in a simple way.
+
+### 1. forEach() method in Iterable interface
+
+Whenever we need to traverse through a Collection, we need to create an Iterator whose whole purpose is to iterate over, and then we have business logic in a loop for each of the elements in the Collection. 
+
+We might get [ConcurrentModificationException](https://www.digitalocean.com/community/tutorials/java-util-concurrentmodificationexception) if the iterator is not used properly.
+
+**<u>Java 8 has introduced forEach method in *java.lang.Iterable* interface</u>** so that while writing code we focus on business logic. The forEach method takes java.util.function.
+
+Consumer object as an argument, so it helps in having our business logic at a separate location that we can reuse. Let’s see forEach usage with a simple example.
+
+```java
+package com.journaldev.java8.foreach;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+import java.lang.Integer;
+
+public class Java8ForEachExample {
+
+	public static void main(String[] args) {
+		// creating sample Collection
+		List<Integer> myList = new ArrayList<Integer>();
+		for(int i=0; i<10; i++) myList.add(i);
+		
+		// traversing using Iterator
+		Iterator<Integer> it = myList.iterator();
+		
+    while(it.hasNext()){
+			Integer i = it.next();
+			System.out.println("Iterator Value::"+i);
+		}
+		
+		//traversing through forEach method of Iterable with anonymous class
+		myList.forEach(new Consumer<Integer>() {
+			public void accept(Integer t) {
+				System.out.println("forEach anonymous class Value::"+t);
+			}
+		});
+		
+		// traversing with Consumer interface implementation
+		MyConsumer action = new MyConsumer();
+		myList.forEach(action);
+		
+	}
+
+}
+
+// Consumer implementation that can be reused
+class MyConsumer implements Consumer<Integer>{
+	public void accept(Integer t) {
+		System.out.println("Consumer impl Value::"+t);
+	}
+}
+```
+
+The number of lines might increase but forEach method helps in having the logic for iteration and business logic at separate place resulting in higher separation of concern and cleaner code.
+
+
+
+-----
+
 ## Getters and Setters in Java
 
 *In Java, getters and setters are methods used to access and modify the private fields of a class.* They are used to ensure that the private fields of a class are accessed and modified in a controlled way. 
@@ -189,11 +267,10 @@ Integer integer = i;
 
 We can convert a wrapper class to its corresponding primitive type using the following syntax:
 
-```
+```java
 // for example, converting an Integer to an int
 Integer integer = Integer.valueOf(10);
 int i = integer.intValue();
-
 ```
 
 Java also provides an unboxing feature that automatically converts a wrapper class to its corresponding primitive type. For example:
@@ -202,7 +279,6 @@ Java also provides an unboxing feature that automatically converts a wrapper cla
 // autounboxing example
 Integer integer = Integer.valueOf(10);
 int i = integer;
-
 ```
 
 In conclusion, wrapper classes provide a way to use primitive data types as objects and are useful in situations where we need to treat primitive types as objects. They also provide utility methods to convert primitive types to objects and vice versa.
@@ -284,6 +360,8 @@ Note: There are two ways to provide values to the object. One way is by construc
 #### POJO - **Important**
 
 > POJO stands for **Plain Old Java Object**. It is an ordinary Java object, not bound by any special restriction other than those forced by the Java Language Specification and not requiring any classpath. POJOs are used for increasing the readability and re-usability of a program.
+
+
 
 ## Java Bean Properties
 
@@ -693,3 +771,19 @@ Create classes and interfaces as needed
 3. Create a spring context
     1. Prefer annotations
     2. Retrieve BusinessCalculationService bean and run `findMax` method.
+
+## What is the difference between a JAR and a WAR file?
+
+JAR and WAR are two different file formats used in Java Spring Boot for packaging and deploying applications.
+
+The main difference between the two is their purpose and the way they function.
+
+A JAR (Java ARchive) file is a package file format used to distribute Java class files, associated metadata, and resources. It is commonly used to distribute standalone Java applications or libraries.
+
+In general, JAR files are preferable for deploying Spring Boot applications because they are lightweight and can be run as standalone applications without requiring an application server. However, if you want multiple applications running under the same application server, you should choose WAR.
+
+A WAR (Web ARchive) file, on the other hand, is a specific type of JAR file used to package and distribute web applications. It contains the web application’s resources, such as servlets, JSPs, and HTML files, as well as a WEB-INF directory that contains additional metadata, such as the web.xml deployment descriptor.
+
+In summary, the main difference between a JAR and a WAR file is their intended use: JAR files are used for packaging and distributing standalone Java applications or libraries, while WAR files are used for packaging and distributing web applications.
+
+I hope this helps you understand the differences between JAR and WAR in deploy in Java Spring Boot!
