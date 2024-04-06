@@ -1,4 +1,4 @@
-# SQL
+# Database, RDMS & SQL
 
 1. DELETE
 
@@ -39,7 +39,15 @@ SELECT DISTINCT `salary` FROM `employee` ORDER BY `salary` DESC LIMIT 1 OFFSET 2
 
 # 3. But there's a catch, this will return you only 1 column which is Salary, because in order to operate the distinction operation, DISTINCT can only operate on a specific set of columns. This means we should add another wrapping query to extract the employees (There can be multiple) that matches that result. Thus I added LIMIT 1 at the end.
 
-SELECT * FROM `employee` WHERE `Salary` = (SELECT DISTINCT `Salary` FROM `employee` ORDER BY `salary` DESC LIMIT 1 OFFSET 2 ) LIMIT 1;
+SELECT * 
+FROM `employee` 
+WHERE `Salary` = (
+  SELECT DISTINCT `Salary` 
+  FROM `employee` 
+  ORDER BY `salary` DESC 
+  LIMIT 1 
+  OFFSET 2 
+) LIMIT 1;
 ```
 
 5. SQL code to give employees average salary
@@ -110,16 +118,149 @@ In this example, `ORDER BY salary DESC` sorts the result set by the `salary` col
 
 Remember to replace `employees`, `employee_name`, and `salary` with your actual table and column names if they are different.
 
-### SQL Exercises for Basic to Advanced Queries
+## Normalization in RDMS
+
+Normalization is the process of dividing the larger table into smaller and links them using relationships. The normal form is used to reduce redundancy from the database table. ***\*Normalization\**** is the process of minimizing ***\*redundancy\**** from a relation or set of relations. Redundancy in relation may cause insertion, deletion, and update anomalies. So, it helps to minimize the redundancy in relations. ***\*Normal forms\**** are used to eliminate or reduce redundancy in database tables.
+
+##### Types of Normal Forms:
+
+![DBMS Normalization](https://static.javatpoint.com/dbms/images/dbms-normalization.png)
+
+| Normal Form                                               | Description                                                  |
+| :-------------------------------------------------------- | :----------------------------------------------------------- |
+| [1NF](https://www.javatpoint.com/dbms-first-normal-form)  | A relation is in 1NF if it contains an atomic value.         |
+| [2NF](https://www.javatpoint.com/dbms-second-normal-form) | A relation will be in 2NF if it is in 1NF and all non-key attributes are fully functional dependent on the primary key. |
+| [3NF](https://www.javatpoint.com/dbms-third-normal-form)  | A relation will be in 3NF if it is in 2NF and no transition dependency exists. |
+| BCNF                                                      | A stronger definition of 3NF is known as Boyce Codd's normal form. |
+| [4NF](https://www.javatpoint.com/dbms-forth-normal-form)  | A relation will be in 4NF if it is in Boyce Codd's normal form and has no multi-valued dependency. |
+| [5NF](https://www.javatpoint.com/dbms-fifth-normal-form)  | A relation is in 5NF. If it is in 4NF and does not contain any join dependency, joining should be lossless. |
+
+### Example of Normalization
+
+
+
+## First Normal Form
+
+If a relation contain composite or multi-valued attribute, it violates first normal form or a relation is in first normal form if it does not contain any composite or multi-valued attribute. A relation is in first normal form if every attribute in that relation is ***\*singled valued attribute\****.
+
+> First Normal Form == Single Valued Attribute
+
+Relation STUDENT in table 1 is not in 1NF because of multi-valued attribute STUD_PHONE. Its decomposition into 1NF has been shown in table 2. 
+
+![Example](https://media.geeksforgeeks.org/wp-content/uploads/20231101151006/1239.png)
+
+Example 2
+
+```
+ID   Name   Courses
+------------------
+1    A      c1, c2
+2    E      c3
+3    M      C2, c3
+```
+
+In the above table Course is a multi-valued attribute so it is not in 1NF. Below Table is in 1NF as there is no multi-valued attribute
+
+```
+ID   Name   Course
+------------------
+1    A       c1
+1    A       c2
+2    E       c3
+3    M       c2
+3    M       c3
+```
+
+
+
+
+
+
+
+# Transaction in DBMS
+
+Transaction in Database Management Systems (DBMS) can be defined as a set of operations to maintain the consistency and integrity of the data present in a database.
+
+Transactions follow 4 properties, namely, Atomicity, Consistency, Isolation, and Durability. Generally, these are referred to as ACID properties of transactions in DBMS. ACID is the acronym used for transaction properties.
+
+### i) Atomicity
+
+This property ensures that either all operations of a transaction are executed or it is aborted. Each transaction is treated as a single unit (like an atom). Atomicity is achieved through 
+
+​	commit and rollback operations, 
+
+i.e. changes are made to the database only if all operations related to a transaction are completed, and if it gets interrupted, any changes made are rolled back using rollback operation to bring the database to its last saved state.
+
+### ii) Consistency
+
+This property of a transaction keeps the database consistent before and after a transaction is completed. There is no ambiguity.
+
+### iii) Isolation
+
+This property states that two transactions must not interfere with each other, i.e. if some data is used by a transaction for its execution, then any other transaction can not concurrently access that data until the first transaction has completed. It ensures that the integrity of the database is maintained and we don’t get any ambiguous values. Thus, any two transactions are isolated from each other. 
+
+This property is enforced by the concurrency control subsystem of DBMS.
+
+### iv) Durability
+
+This property ensures that the changes made to the database after a transaction is completely executed, are durable. It indicates that permanent changes are made by the successful execution of a transaction. In the event of any system failures or crashes, the consistent state achieved after the completion of a transaction remains intact. 
+
+The recovery subsystem of DBMS is responsible for enforcing this property.
+
+https://www.geeksforgeeks.org/sql-transactions/
+
+### Types of Keys in Relational Model (Candidate, Super, Primary, Alternate and Foreign)
+
+### 1. Primary key
+
+It is the first key used to identify one and only one instance of an entity uniquely.
+
+
+
+### 2. Candidate key
+
+- A candidate key is an attribute or set of attributes that can uniquely identify a tuple.
+- Except for the primary key, the remaining attributes are considered a candidate key. The candidate keys are as strong as the primary key.
+
+**For example:** In the EMPLOYEE table, id is best suited for the primary key. The rest of the attributes, like SSN, Passport_Number, License_Number, etc., are considered a candidate key.
+
+### 3. Super Key
+
+Super key is an attribute set that can uniquely identify a tuple. A super key is a superset of a candidate key.
+
+![DBMS Keys](https://static.javatpoint.com/dbms/images/dbms-keys5.png)
+
+**For example:** In the above EMPLOYEE table, for(EMPLOEE_ID, EMPLOYEE_NAME), the name of two employees can be the same, but their EMPLYEE_ID can't be the same. Hence, this combination can also be a key. The super key would be EMPLOYEE-ID (EMPLOYEE_ID, EMPLOYEE-NAME), etc.
+
+### 4. Foreign key
+
+- Foreign keys are the column of the table used to point to the primary key of another table.
+
+![DBMS Keys](https://static.javatpoint.com/dbms/images/dbms-keys6.png)
+
+### 5. Alternate key
+
+There may be one or more attributes or a combination of attributes that uniquely identify each tuple in a relation. These attributes or combinations of the attributes are called the candidate keys. One key is chosen as the primary key from these candidate keys, and the remaining candidate key, if it exists, is termed the alternate key. **In other words,** the total number of the alternate keys is the total number of candidate keys minus the primary key. The alternate key may or may not exist. If there is only one candidate key in a relation, it does not have an alternate key.
+
+**For example,** employee relation has two attributes, Employee_Id and PAN_No, that act as candidate keys. In this relation, Employee_Id is chosen as the primary key, so the other candidate key, PAN_No, acts as the Alternate key.
+
+![DBMS Keys](https://static.javatpoint.com/dbms/images/dbms-keys7.png)
+
+### 6. Composite key
+
+Whenever a primary key consists of more than one attribute, it is known as a composite key. 
+
+
+
+## SQL Exercises for Basic to Advanced Queries
 
 **#1** Create a query that displays EMPFNAME, EMPLNAME, DEPTCODE, DEPTNAME, LOCATION from EMPLOYEE, and DEPARTMENT tables. Make sure the results are in ascending order based on the EMPFNAME and LOCATION of the department.
 
 ```sql
-SELECT E.EMPFNAME, E.EMPLNAME, E.DEPTCODE,
-       D.DEPTNAME, D.LOCATION
-       FROM EMPLOYEE E, DEPARTMENT D
-       WHERE E.DEPTCODE = D.DEPTCODE
-       ORDER BY E.EMPFNAME, D.LOCATION;
+SELECT E.EMPFNAME, E.EMPLNAME, E.DEPTCODE,D.DEPTNAME, D.LOCATION
+FROM EMPLOYEE E, DEPARTMENT D
+WHERE E.DEPTCODE = D.DEPTCODE
+ORDER BY E.EMPFNAME, D.LOCATION;
 ```
 
 **#2** Display EMPFNAME and “TOTAL SALARY” for each employee
@@ -203,8 +344,6 @@ This query selects all employees who have been with the company for at least one
 ### 4 Queries useful for a DevOps engineer
 
 Here are 4 complex SQL exercises that are important for the DevOps engineer:
-
-
 
 **a)** Query to find all database tables which was not part of the backup during last week:
 
